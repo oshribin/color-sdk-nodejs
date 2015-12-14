@@ -15,12 +15,12 @@ util.inherits( SDK, events.EventEmitter );
 function SDK ( apikey, apisecret ) {
     events.EventEmitter.call( this );
 
-    // api-key: ACCOUNT/RAND1
-    // api-secret: BASE64( RAND2/UUID/AWSACCOUNT/REGION )
-    // queue: sdk-ACCOUNT-RAND2
-    var account = apikey.split( "/" )[ 0 ];
+    // api-key: ACCOUNT/color-sdk/RAND1
+    // api-secret: BASE64( RAND2/queueid/AWSACCOUNT/REGION )
+    var accounts = apikey.split( "/" );
+    var qaccount = accounts[ 1 ];
     var decoded = new Buffer( apisecret, "base64" ).toString().split( "/" );
-    var rand = decoded[ 0 ];
+    var qid = decoded[ 1 ];
     var awsaccount = decoded[ 2 ];
     var region = decoded[ 3 ];
 
@@ -33,7 +33,7 @@ function SDK ( apikey, apisecret ) {
     this.qurl = [
         "https://sqs." + region + ".amazonaws.com",
         awsaccount,
-        "sdk-" + account + "-" + rand
+        qaccount + "-" + qid
     ].join( "/" );
 
     this.flushcnt = 0;
